@@ -27,10 +27,17 @@ function Cards() {
     if (displayText) { // Only fetch data if searchTerm is not empty
       fetch(`https://www.omdbapi.com/?s=${displayText}&apikey=dd69d14d`)
         .then(response => response.json())
-        .then(data => setCardsData(data))
+        .then(data => {
+          if (data.Response === "False" ) {
+            alert("API is unable to handle this request. Please use a diffrent search keyword.");
+          } else {
+            setCardsData(data);
+          }
+        })
         .catch(error => console.error(error));
-    }
+    } 
   }, [displayText]);
+
 
   //handles search input
   const handleSearch = (event) => {
@@ -59,12 +66,12 @@ function Cards() {
     const indexOfLastCard = currentPage * cardsPerPage;
     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
     const currentCards = cardsData?.Search?.slice(indexOfFirstCard, indexOfLastCard);
-    const totalPages = Math.ceil(cardsData?.Search.length / cardsPerPage);
+    const totalPages = Math.ceil(cardsData?.Search?.length / cardsPerPage);
     //pagination button backward and forward
     const handlePageClick = (pageNumber) => {
       setCurrentPage(pageNumber);
     };
-    console.log(cardsData)
+
   return (
     <>
       <Dashboard 
